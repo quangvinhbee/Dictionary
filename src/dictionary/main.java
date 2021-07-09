@@ -32,13 +32,17 @@ public class main {
         }
     }
 
+    
     static void Case1() throws IOException {
         String inputWord = "";
         ArrayList<Word> temp = new ArrayList<>();
         while (true) {
             temp = new ArrayList<>();
-            System.out.print("---------TU DIEN ANH - VIET--------- \n Nhap tu can tim: ");
+            System.out.print("---------Case 1--------- \nNhap -e de thoat\n Nhap tu can tim: ");
             inputWord = Input.input_String();
+            if (inputWord.equals("-e")) {
+                return;
+            }
             for (Word item : data) {
                 if (item.getWord().contains(inputWord)) {
                     temp.add(item);
@@ -50,11 +54,11 @@ public class main {
 
     static void Case2() throws IOException {
         String data1 = "", data3 = "", data2 = "";
-        System.out.print("---------TU DIEN ANH - VIET--------- \n Nhap tu moi: ");
+        System.out.print("---------Case 2--------- \n Nhap tu moi: ");
         data1 = Input.input_String();
-        System.out.println("Nhap loai tu: ");
+        System.out.print("Nhap loai tu: ");
         data2 = Input.input_String();
-        System.out.println("Nhap nghia cua tu: ");
+        System.out.print("Nhap nghia cua tu: ");
         data3 = Input.input_String();
 
         Word word = new Word(data1, "(" + data2 + ") " + data3);
@@ -66,10 +70,58 @@ public class main {
                 return o1.getWord().compareTo(o2.getWord());
             }
         });
-        if(IOStream.WriteFile(data))System.out.println("Them tu thanh cong!"); else System.out.println("Them tu that bai");
+        if (IOStream.WriteFile(data)) {
+            System.out.println("Them tu thanh cong!");
+        } else {
+            System.out.println("Them tu that bai");
+        }
     }
 
-    static void menu() throws IOException {
+    static Word EditWord(Word word) throws IOException{
+        System.out.print("Từ cần chỉnh sửa:\nTừ tiếng Anh("+word.getWord()+"): ");
+        word.setWord(Input.input_String());
+        System.out.print("Từ tiếng Việt("+word.getMeaning()+"): ");
+        word.setMeaning(Input.input_String());
+        return word;
+    }
+    static void Case3() throws IOException, InterruptedException {
+        String word = "";
+        System.out.print("---------Case 3--------- \nNhập từ cần chỉnh sửa: ");
+        word = Input.input_String();
+        Word wordTemp = new Word();
+        for (Word item : data) {
+            if (item.getWord().equals(word)) {
+                item = EditWord(item);
+                IOStream.WriteFile(data);
+                System.out.println("Đã chỉnh sửa!");
+                Thread.sleep(2000);
+                return;
+            }
+        }
+        System.out.println("Không có từ cần tìm");
+        Thread.sleep(2000);
+    }
+    
+    static void Case4() throws IOException, InterruptedException {
+        String word = "";
+        System.out.print("---------Case 4--------- \nNhập từ cần xóa: ");
+        word = Input.input_String();
+        Word wordTemp = new Word();
+        for (Word item : data) {
+            if (item.getWord().equals(word)) {
+                data.remove(item);
+                IOStream.WriteFile(data);
+                System.out.println("Đã xóa");
+                Thread.sleep(2000);
+                return;
+            }
+        }
+        
+        System.out.println("Không có từ cần tìm");
+        Thread.sleep(2000);
+    }
+
+    static void menu() throws IOException, InterruptedException {
         int select;
         while (true) {
             System.out.print("---------TU DIEN ANH - VIET--------- \n 1. Tim tu\n 2. Them tu \n 3. Sua tu \n 4. Xoa tu \n 0. Thoat \n => Nhap lua chon: ");
@@ -82,10 +134,10 @@ public class main {
                     Case2();
                     break;
                 case 3:
-                    System.out.println("3");
+                    Case3();
                     break;
                 case 4:
-                    System.out.println("4");
+                    Case4();
                     break;
                 case 0:
                     System.exit(0);
@@ -97,7 +149,7 @@ public class main {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         init();
         menu();
 
